@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/iv_menuButton"
+        android:layout_gravity="center_horizontal|bottom"
+        android:src="@drawable/up2"
+        android:layout_width="40dp"
+        android:layout_height="40dp">
+    </ImageView>
+
+    <FrameLayout
+        android:visibility="invisible"
+        android:id="@+id/fl_menu"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="30dp"
+        android:layout_width="200dp"
+        android:layout_height="100dp">
+       <LinearLayout
+           android:orientation="vertical"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent">
+            <LinearLayout
+               android:orientation="horizontal"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+                //First Row
+               <Button
+                   android:id="@+id/bt_menuNight"
+                   android:layout_weight="1"
+                   android:text="야간모드"
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content" />
+               <Button
+                   android:id="@+id/bt_menuDay"
+                   android:text="주간모드"
+                   android:layout_weight="1"
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content" />
+           </LinearLayout>
+
+                //Second Row
+           <LinearLayout
+               android:orientation="horizontal"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+
+               <Button
+                   android:id="@+id/bt_menuPre"
+                   android:layout_weight="1"
+                   android:text="전페이지"
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content" />
+               <Button
+                   android:text="불러오기"
+                   android:layout_weight="1"
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content" />
+           </LinearLayout>
+
+       </LinearLayout>
+    </FrameLayout>
+</FrameLayout>
