@@ -1,7 +1,10 @@
 package com.ace.prototypechoiceadventure;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,10 +14,27 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class Dul2Fragment extends Fragment {
+public class Dul2Fragment extends Fragment implements Parcelable {
     TextView tv_dul;
     Button bt_dul1, bt_dul2;
     OnFragmentButtonListener listener;
+
+    @SuppressLint("ValidFragment")
+    protected Dul2Fragment(Parcel in) {
+    }
+
+    public static final Creator<Dul2Fragment> CREATOR = new Creator<Dul2Fragment>() {
+        @Override
+        public Dul2Fragment createFromParcel(Parcel in) {
+            return new Dul2Fragment(in);
+        }
+
+        @Override
+        public Dul2Fragment[] newArray(int size) {
+            return new Dul2Fragment[size];
+        }
+    };
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -51,5 +71,14 @@ public class Dul2Fragment extends Fragment {
             }
         });
         return v;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
     }
 }

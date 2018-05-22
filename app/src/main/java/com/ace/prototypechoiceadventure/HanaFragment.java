@@ -1,8 +1,11 @@
 package com.ace.prototypechoiceadventure;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +16,26 @@ import android.widget.TextView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HanaFragment extends Fragment {
+public class HanaFragment extends Fragment implements Parcelable {
     TextView tv_hana;
     OnFragmentButtonListener listener;
+
+    @SuppressLint("ValidFragment")
+    protected HanaFragment(Parcel in) {
+    }
+
+    public static final Creator<HanaFragment> CREATOR = new Creator<HanaFragment>() {
+        @Override
+        public HanaFragment createFromParcel(Parcel in) {
+            return new HanaFragment(in);
+        }
+
+        @Override
+        public HanaFragment[] newArray(int size) {
+            return new HanaFragment[size];
+        }
+    };
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -51,4 +71,12 @@ public class HanaFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+    }
 }
