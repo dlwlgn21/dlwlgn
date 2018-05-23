@@ -1,21 +1,33 @@
 package com.ace.prototypechoiceadventure;
 
-import android.content.Intent;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
+
+import android.os.AsyncTask;
+
+
 import android.support.v4.app.Fragment;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
+
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 public class MainActivity extends AppCompatActivity implements OnFragmentButtonListener {
     FrameLayout container;
+    FrameLayout fl_startActive;
     DulFragment dulFragment;
     Dul2Fragment dul2Fragment;
     SamFragment samFragment;
@@ -28,26 +40,48 @@ public class MainActivity extends AppCompatActivity implements OnFragmentButtonL
     Animation up,down;
     boolean isPageVisible = false;
     public static final String SAVED_STATE = "saved";
+    public static final String SAVED_PERSISTANCE_FILE = "saved_fille";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         if(savedInstanceState != null){
-           Fragment fragment =  (Fragment) savedInstanceState.getParcelable(SAVED_STATE);
-           getSupportFragmentManager().beginTransaction()
-                   .replace(R.id.fl_container, fragment)
-                   .addToBackStack("Present").commit();
-            Log.d("SAVEDSTATE", "이쪽으로 들어와라 좀.");
-        }
-            startFragment();
+            Log.d("onCreate()","들어와서 불러오기 수행!!");
+            Fragment fragment = (Fragment) savedInstanceState.getSerializable(SAVED_STATE);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fl_container,fragment).commit();
 
-            iv_menuButton = findViewById(R.id.iv_menuButton);
-            fl_menu = findViewById(R.id.fl_menu);
-            up = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.up);
-            down = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.down);
-            startImageViewButton();
+        }
+
+        fl_startActive = findViewById(R.id.fl_startActive);
+        findViewById(R.id.bt_newGame).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fl_startActive.setVisibility(View.INVISIBLE);
+                startFragment();
+            }
+        });
+        findViewById(R.id.bt_loadGame).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fl_startActive.setVisibility(View.INVISIBLE);
+                readFileForFragment();
+            }
+        });
+        findViewById(R.id.bt_exit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        iv_menuButton = findViewById(R.id.iv_menuButton);
+        fl_menu = findViewById(R.id.fl_menu);
+        up = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.up);
+        down = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.down);
+        startImageViewButton();
+
 
 
     }
@@ -59,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentButtonL
         iv_menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isPageVisible == false){
+                if(!isPageVisible){
                     fl_menu.startAnimation(up);
                     fl_menu.setVisibility(View.VISIBLE);
                     isPageVisible = true;
@@ -80,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentButtonL
                 dulFragment = new DulFragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_container, dulFragment)
-                        .addToBackStack("Dul").commit();
+                        .commit();
 
                 break;
 
@@ -88,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentButtonL
                 dul2Fragment = new Dul2Fragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_container,dul2Fragment)
-                        .addToBackStack("Dul2").commit();
+                        .commit();
 
                 break;
 
@@ -96,26 +130,26 @@ public class MainActivity extends AppCompatActivity implements OnFragmentButtonL
                 samFragment = new SamFragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_container,samFragment)
-                        .addToBackStack("Sam").commit();
+                        .commit();
                 break;
             case 4:
                 sam2Fragment = new Sam2Fragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_container,sam2Fragment)
-                        .addToBackStack("Sam2").commit();
+                        .commit();
 
                 break;
             case 5:
                 sam3Fragment = new Sam3Fragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_container,sam3Fragment)
-                        .addToBackStack("Sam3").commit();
+                        .commit();
                 break;
             case 6:
                 sam4Fragment = new Sam4Fragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_container,sam4Fragment)
-                        .addToBackStack("Sam4").commit();
+                        .commit();
                 break;
 
 
@@ -132,10 +166,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentButtonL
 
     @Override
     protected void onPause() {
-        Parcelable curFragment = (Parcelable) getSupportFragmentManager().findFragmentById(R.id.fl_container);
+        Fragment curFragment =getSupportFragmentManager().findFragmentById(R.id.fl_container);
         Bundle outState = new Bundle();
-        outState.putParcelable(SAVED_STATE,curFragment);
-
+        outState.putSerializable(SAVED_STATE, (Serializable) curFragment);
         onSaveInstanceState(outState);
         super.onPause();
     }
@@ -143,6 +176,83 @@ public class MainActivity extends AppCompatActivity implements OnFragmentButtonL
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStop() {
+        AsyncForFileWrite writeTask = new AsyncForFileWrite();
+        writeTask.execute();
+        super.onStop();
+    }
+
+
+
+    private void readFileForFragment(){
+       AsyncForFileRead readTask = new AsyncForFileRead();
+       readTask.execute();
+    }
+
+    class AsyncForFileWrite extends AsyncTask<Void, Void, Void>{
+        Object lastFragment;
+        @Override
+        protected void onPreExecute() {
+            lastFragment = getSupportFragmentManager().findFragmentById(R.id.fl_container);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Log.d("AsyncForFileWrite","들어왔음.");
+                FileOutputStream fos = openFileOutput(SAVED_PERSISTANCE_FILE,MODE_PRIVATE);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(lastFragment);
+                Log.d("AsyncForFileWrite","파일 썼음.");
+                oos.flush();
+                oos.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+    class AsyncForFileRead extends AsyncTask<Void, Void, Fragment>{
+        Fragment lastFragment;
+        @Override
+        protected Fragment doInBackground(Void... voids) {
+            try {
+                Log.d("AsyncForFileRead","들어왔음.");
+                FileInputStream fis = openFileInput(SAVED_PERSISTANCE_FILE);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                Object object = ois.readObject();
+                Log.d("AsyncForFileRead","파일읽었음.");
+                lastFragment = (Fragment) object;
+                Log.d("AsyncForFileRead","파일 불러왔음. : "+lastFragment.toString());
+                ois.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            return lastFragment;
+        }
+
+        @Override
+        protected void onPostExecute(Fragment fragment) {
+            super.onPostExecute(fragment);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fl_container,fragment)
+                    .commit();
+        }
     }
 }
 

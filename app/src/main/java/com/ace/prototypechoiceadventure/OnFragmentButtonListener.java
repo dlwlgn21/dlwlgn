@@ -1,5 +1,5 @@
 package com.ace.prototypechoiceadventure;
 
-public interface OnFragmentButtonListener {
+public interface OnFragmentButtonListener  {
     void onFragmentButtonClicked(int position);
 }

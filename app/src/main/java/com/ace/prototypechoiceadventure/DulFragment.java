@@ -14,12 +14,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.Serializable;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DulFragment extends Fragment implements Parcelable {
-    OnFragmentButtonListener listener;
+public class DulFragment extends Fragment implements Serializable {
+    transient OnFragmentButtonListener listener;
 
     @Override
     public void onAttach(Context context) {
@@ -31,21 +33,8 @@ public class DulFragment extends Fragment implements Parcelable {
         // Required empty public constructor
     }
 
-    @SuppressLint("ValidFragment")
-    protected DulFragment(Parcel in) {
-    }
 
-    public static final Creator<DulFragment> CREATOR = new Creator<DulFragment>() {
-        @Override
-        public DulFragment createFromParcel(Parcel in) {
-            return new DulFragment(in);
-        }
 
-        @Override
-        public DulFragment[] newArray(int size) {
-            return new DulFragment[size];
-        }
-    };
 
 
 
@@ -69,12 +58,5 @@ public class DulFragment extends Fragment implements Parcelable {
     }
 
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-    }
 }

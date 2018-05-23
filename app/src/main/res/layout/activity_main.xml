@@ -4,6 +4,48 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
+    <FrameLayout
+        android:id="@+id/fl_startActive"
+        android:layout_gravity="center"
+        android:layout_width="250dp"
+        android:layout_height="250dp">
+        <LinearLayout
+            android:weightSum="4"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/bt_newGame"
+                android:layout_weight="1"
+                android:text="@string/bt_newGame"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp" />
+            <Button
+                android:id="@+id/bt_loadGame"
+                android:layout_weight="1"
+                android:text="@string/bt_loadGame"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp" />
+            <Button
+                android:id="@+id/bt_loadCheckPoint"
+                android:text="@string/bt_loadCheckPoint"
+                android:layout_weight="1"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp" />
+            <Button
+                android:id="@+id/bt_exit"
+                android:text="@string/bt_exit"
+                android:layout_weight="1"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp" />
+        </LinearLayout>
+    </FrameLayout>
+
 
     <FrameLayout
         android:id="@+id/fl_container"
@@ -28,6 +70,7 @@
         android:layout_width="200dp"
         android:layout_height="100dp">
        <LinearLayout
+           android:id="@+id/fl_startActivity"
            android:orientation="vertical"
            android:layout_width="match_parent"
            android:layout_height="match_parent">
@@ -63,6 +106,7 @@
                    android:layout_width="0dp"
                    android:layout_height="wrap_content" />
                <Button
+                   android:id="@+id/bt_read"
                    android:text="불러오기"
                    android:layout_weight="1"
                    android:layout_width="0dp"

@@ -14,26 +14,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class Dul2Fragment extends Fragment implements Parcelable {
-    TextView tv_dul;
-    Button bt_dul1, bt_dul2;
-    OnFragmentButtonListener listener;
+import java.io.Serializable;
 
-    @SuppressLint("ValidFragment")
-    protected Dul2Fragment(Parcel in) {
-    }
+public class Dul2Fragment extends Fragment implements Serializable {
+    transient TextView tv_dul;
+    transient Button bt_dul1, bt_dul2;
+    transient OnFragmentButtonListener listener;
 
-    public static final Creator<Dul2Fragment> CREATOR = new Creator<Dul2Fragment>() {
-        @Override
-        public Dul2Fragment createFromParcel(Parcel in) {
-            return new Dul2Fragment(in);
-        }
-
-        @Override
-        public Dul2Fragment[] newArray(int size) {
-            return new Dul2Fragment[size];
-        }
-    };
 
     @Override
     public void onAttach(Context context) {
@@ -73,12 +60,5 @@ public class Dul2Fragment extends Fragment implements Parcelable {
         return v;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-    }
 }

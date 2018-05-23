@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">ProtoTypeChoiceAdventure</string>
-
+    <string name="bt_newGame">New Game</string>
+    <string name="bt_loadGame">Load Game</string>
+    <string name="bt_loadCheckPoint">Load\nCheckPoint</string>
+    <string name="bt_exit">Exit</string>
     <!-- HanaFragment-->
     <string name="firstText">대체 어쩌다가 이렇게 되버린걸까..
         \n좀비 바이러스가 창궐한지 6개월이 지났다.

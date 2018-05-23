@@ -12,29 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.Serializable;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HanaFragment extends Fragment implements Parcelable {
-    TextView tv_hana;
-    OnFragmentButtonListener listener;
+public class HanaFragment extends Fragment implements Serializable {
+    transient TextView tv_hana;
+    transient OnFragmentButtonListener listener;
 
-    @SuppressLint("ValidFragment")
-    protected HanaFragment(Parcel in) {
-    }
 
-    public static final Creator<HanaFragment> CREATOR = new Creator<HanaFragment>() {
-        @Override
-        public HanaFragment createFromParcel(Parcel in) {
-            return new HanaFragment(in);
-        }
-
-        @Override
-        public HanaFragment[] newArray(int size) {
-            return new HanaFragment[size];
-        }
-    };
 
     @Override
     public void onAttach(Context context) {
@@ -71,12 +59,4 @@ public class HanaFragment extends Fragment implements Parcelable {
         return v;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-    }
 }
